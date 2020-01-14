@@ -9,6 +9,7 @@
 
 # 编译器配置
 COMPILE_PREFIX=
+ARCH=x86
 
 CC=$(COMPILE_PREFIX)gcc 
 LD=$(COMPILE_PREFIX)ld

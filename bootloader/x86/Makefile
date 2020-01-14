@@ -8,9 +8,11 @@
 # 日期：2020-1 2020-1
 
 
-include ../config.mk
+MADOSIX_ROOT_DIR=../..
 
-CFLAGS += -I ../include
+include $(MADOSIX_ROOT_DIR)/config.mk
+
+CFLAGS += -I $(MADOSIX_ROOT_DIR)/include
 
 boot.img: main.c start.S bootloader.lds
 	$(CC) $(CFLAGS) -c start.S -o start.o
@@ -19,4 +21,3 @@ boot.img: main.c start.S bootloader.lds
 	$(OBJDUMP) -S boot.elf > boot.asm
 	$(OBJCOPY) -S -O binary -j .text  boot.elf boot.img
 	$(BUILD_BOOTIMG) buildbootimg.pl boot.img
-

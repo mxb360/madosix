@@ -22,6 +22,8 @@
 
 include config.mk
 
+BOOT_DIR=bootloader/$(ARCH)
+
 # 默认行为：生成系统镜像文件
 all: madosix.img
 madosiximg: madosix.img
@@ -31,11 +33,11 @@ qemu: madosix.img
 	$(QEMU) -serial mon:stdio -drive file=madosix.img,format=raw
 
 bootimg: 
-	$(MAKE) -C bootloader
+	$(MAKE) -C $(BOOT_DIR)
 
 clean:
-	$(RM) -rf bootloader/*.bin bootloader/*.o bootloader/*.img bootloader/*.asm bootloader/*.elf
+	$(RM) -rf $(BOOT_DIR)/*.bin $(BOOT_DIR)/*.o $(BOOT_DIR)/*.img $(BOOT_DIR)/*.asm $(BOOT_DIR)/*.elf
 	$(RM) -rf madosix.img
 
 madosix.img: bootimg
-	$(DD) if=bootloader/boot.img of=madosix.img bs=512 count=1
+	$(DD) if=$(BOOT_DIR)/boot.img of=madosix.img bs=512 count=1
