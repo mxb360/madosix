@@ -1,8 +1,19 @@
-#include "x86.h"
+#include <x86/x86.h>
+#include <madosix/types.h>
+#include <madosix/elf32.h>
 
 #define SECTOR_SIZE  512 
 
-static void read_data_from_sector1(void *dst, uint offset)
+static void read_data_from_sector(void *dst, uint offset);
+
+
+int main(void)
+{
+    read_data_from_sector(NULL, 0);
+    return 0;
+}
+
+static void read_data_from_sector(void *dst, uint offset)
 {
     while((inb(0x1F7) & 0xC0) != 0x40);
 
@@ -17,7 +28,3 @@ static void read_data_from_sector1(void *dst, uint offset)
     insl(0x1F0, dst, SECTOR_SIZE/4);
 }
 
-int main(void)
-{
-    return 0;
-}

@@ -1,7 +1,7 @@
 #ifndef __MADOSIX_X86_H__
 #define __MADOSIX_X86_H__
 
-#include "types.h"
+#include <madosix/types.h>
 
 static inline uchar
 inb(ushort port)
