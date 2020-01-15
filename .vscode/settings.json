@@ -1,0 +1,15 @@
+{
+    "search.exclude": {
+        "**/*.o": true,
+        "**/*.bin": true,
+        "**/*.img": true,
+        "**/*.elf": true,
+    },
+
+    "files.exclude": {
+        "**/*.o": true,
+        "**/*.bin": true,
+        "**/*.img": true,
+        "**/*.elf": true,
+    },
+}

@@ -5,6 +5,9 @@
 
 #define ELF32_MAGIC 0x464C457FU  
 
+#define is_elf32_file(elf32_header)         ((elf32_header)->magic == ELF32_MAGIC)
+#define get_program_header(elf32_header)    ((elf32_program_section_header_t *)               \
+                                            (((char *)(elf32_header)) + (elf32_header)->phoff))
 /* 32位ELF文件头 */
 typedef struct elf32_header {
     uint32_t magic;             // 魔数
@@ -24,4 +27,16 @@ typedef struct elf32_header {
     uint16_t shstrndx;          // 字符串表段索引
 } elf32_header_t;
 
+typedef struct elf32_program_section_header {
+    uint32_t type;
+    uint32_t off;
+    uint32_t vaddr;
+    uint32_t paddr;
+    uint32_t filesz;
+    uint32_t memsz;
+    uint32_t flags;
+    uint32_t align;
+} elf32_program_section_header_t;
+
 #endif
+

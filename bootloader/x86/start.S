@@ -71,7 +71,7 @@ _start32:
     # 调用bootloaderC语言部分的main函数，bootloader剩下的工作用C语言完成
     # bootloaderC语言部分的作用是找到内核文件的入口函数并调用
     # 正常情况下main函数不会返回
-    call    main
+    call bootloader_main
     
     # 不应该执行此处
     # 如果到此处，说明系统启动失败

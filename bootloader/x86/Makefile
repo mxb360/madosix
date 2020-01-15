@@ -12,7 +12,7 @@ MADOSIX_ROOT_DIR=../..
 
 include $(MADOSIX_ROOT_DIR)/config.mk
 
-CFLAGS += -I $(MADOSIX_ROOT_DIR)/include
+CFLAGS += -I $(MADOSIX_ROOT_DIR)/include -O2
 
 boot.img: main.c start.S bootloader.lds
 	$(CC) $(CFLAGS) -c start.S -o start.o
@@ -21,3 +21,6 @@ boot.img: main.c start.S bootloader.lds
 	$(OBJDUMP) -S boot.elf > boot.asm
 	$(OBJCOPY) -S -O binary -j .text  boot.elf boot.img
 	$(BUILD_BOOTIMG) buildbootimg.pl boot.img
+
+clean:
+	$(RM) -rf *.bin *.img *.sam *.o *.elf

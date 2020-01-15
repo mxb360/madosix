@@ -23,6 +23,7 @@
 include config.mk
 
 BOOT_DIR=bootloader/$(ARCH)
+KERN_DIR=kernel
 TEST_DIR=test
 
 # 默认行为：生成系统镜像文件
@@ -31,16 +32,22 @@ madosiximg: madosix.img
 
 # 生成镜像文件并运行(需要qemu)
 qemu: madosix.img
-	$(QEMU) -serial mon:stdio -drive file=madosix.img,format=raw
+	$(QEMU) -serial mon:stdio -drive file=madosix.img,format=raw -m 512
 
 bootimg: 
 	$(MAKE) -C $(BOOT_DIR)
+
+kernel:
+	$(MAKE) -C $(KERN_DIR)
 
 clean:
 	$(RM) -rf madosix.img
 
 	$(MAKE) -C $(BOOT_DIR) clean
 	$(MAKE) -C $(TEST_DIR) clean
+	$(MAKE) -C $(KERN_DIR) clean
 
-madosix.img: bootimg
-	$(DD) if=$(BOOT_DIR)/boot.img of=madosix.img bs=512 count=1
+madosix.img: bootimg kernel
+	$(DD) if=/dev/zero of=madosix.img count=10000
+	$(DD) if=$(BOOT_DIR)/boot.img of=madosix.img conv=notrunc
+	$(DD) if=$(KERN_DIR)/kernel.img of=madosix.img seek=1 conv=notrunc

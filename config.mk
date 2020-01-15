@@ -14,7 +14,7 @@ ARCH=x86
 CC=$(COMPILE_PREFIX)gcc 
 LD=$(COMPILE_PREFIX)ld
 
-CFLAGS = -m32 -Wall -Werror
+CFLAGS = -m32 -Wall -N
 LDFLAGS =
 
 OBJCOPY=$(COMPILE_PREFIX)objcopy
