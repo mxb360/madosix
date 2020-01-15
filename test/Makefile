@@ -23,4 +23,3 @@ clean:
 
 elf32_test:
 	$(CC) $(CFLAGS) elf32_test.c -o elf32_test
-
