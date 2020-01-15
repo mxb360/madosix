@@ -23,6 +23,7 @@
 include config.mk
 
 BOOT_DIR=bootloader/$(ARCH)
+TEST_DIR=test
 
 # 默认行为：生成系统镜像文件
 all: madosix.img
@@ -36,8 +37,10 @@ bootimg:
 	$(MAKE) -C $(BOOT_DIR)
 
 clean:
-	$(RM) -rf $(BOOT_DIR)/*.bin $(BOOT_DIR)/*.o $(BOOT_DIR)/*.img $(BOOT_DIR)/*.asm $(BOOT_DIR)/*.elf
 	$(RM) -rf madosix.img
+
+	$(MAKE) -C $(BOOT_DIR) clean
+	$(MAKE) -C $(TEST_DIR) clean
 
 madosix.img: bootimg
 	$(DD) if=$(BOOT_DIR)/boot.img of=madosix.img bs=512 count=1

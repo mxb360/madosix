@@ -5,3 +5,4 @@
 *.asm
 *.out
 *.bak
+*_test
