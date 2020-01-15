@@ -12,6 +12,8 @@ typedef unsigned short uint16_t;
 typedef int            int32_t;
 typedef unsigned       uint32_t;
 
+typedef uint32_t       size_t;
+
 /* 定义布尔类型 */
 typedef enum {
     false, true

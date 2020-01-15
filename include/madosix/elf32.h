@@ -8,7 +8,7 @@
 /* 32位ELF文件头 */
 typedef struct elf32_header {
     uint32_t magic;             // 魔数
-    uint8_t  elf[12];           //
+    uint8_t  ident[12];         //
     uint16_t type;              // 类型
     uint16_t machine;           // 系统架构
     uint32_t version;           // 版本
