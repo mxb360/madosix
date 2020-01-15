@@ -2,10 +2,11 @@
 #include <madosix/types.h>
 #include <madosix/elf32.h>
 
-static void copy_program_section(void *dest, size_t size, uint32_t offset);
-
 #define SECTOR_SIZE    512
 #define KERNEL_HEADER  0x1000000
+
+typedef void (*start_kernel_func_t)(void);
+static void copy_program_section(void *dest, size_t size, uint32_t offset);
 
 /* bootloader C语言部分入口函数 
  * 在start.S里被调用
@@ -13,9 +14,13 @@ static void copy_program_section(void *dest, size_t size, uint32_t offset);
 void bootloader_main(void)
 {
     int index;
-    elf32_header_t *kernel_header = (elf32_header_t *)KERNEL_HEADER;
-    elf32_program_section_header_t * program_header_start;
-    elf32_program_section_header_t * program_header;
+    elf32_header_t *kernel_header;
+    elf32_program_header_t *program_header_start;
+    elf32_program_header_t *program_header;
+    start_kernel_func_t start_kernel;
+
+    /* Kernel镜像文件地址在KERNEL_HEADER(0x1000000)处 */
+    kernel_header = (elf32_header_t *)KERNEL_HEADER;
 
     /* 从kernel镜像里读取ELF32文件头 */
     copy_program_section(kernel_header, sizeof(elf32_header_t), 0);
@@ -40,8 +45,15 @@ void bootloader_main(void)
         }
     }
 
-    /* 跳转到内核函数入口， 这个函数不会返回 */
-    ((void(*)(void))kernel_header->entry)();
+    /* 获取内核的启动函数入口 */
+    start_kernel = (start_kernel_func_t)kernel_header->entry;
+while (1)
+{
+    /* code */
+}
+
+    /* 启动内核，此函数不会返回 */
+    start_kernel();
 }
 
 /* 复制硬盘上一个扇区的数据到内存

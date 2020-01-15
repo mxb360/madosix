@@ -37,7 +37,7 @@ qemu: madosix.img
 bootimg: 
 	$(MAKE) -C $(BOOT_DIR)
 
-kernel:
+kernelimg:
 	$(MAKE) -C $(KERN_DIR)
 
 clean:
@@ -47,7 +47,7 @@ clean:
 	$(MAKE) -C $(TEST_DIR) clean
 	$(MAKE) -C $(KERN_DIR) clean
 
-madosix.img: bootimg kernel
+madosix.img: bootimg kernelimg
 	$(DD) if=/dev/zero of=madosix.img count=10000
 	$(DD) if=$(BOOT_DIR)/boot.img of=madosix.img conv=notrunc
-	$(DD) if=$(KERN_DIR)/kernel.img of=madosix.img seek=1 conv=notrunc
+	$(DD) if=$(KERN_DIR)/kernel of=madosix.img seek=1 conv=notrunc

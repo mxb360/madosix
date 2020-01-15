@@ -16,6 +16,15 @@ CFLAGS += -I $(MADOSIX_ROOT_DIR)/include
 
 all: kernel.img
 
-kernel.img:
+KERNEL_OBJ=main.o uart.o
+
+kernel.img: $(KERNEL_OBJ)
+	$(LD) $(LDFLAGS) -T kernel.lds $(KERNEL_OBJ) -o kernel
+	$(OBJDUMP) -S kernel > kernel.asm
+
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
+	rm -rf *.o *.asm
