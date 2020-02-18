@@ -1,5 +1,5 @@
-#ifndef __MADOSIX_X86_H__
-#define __MADOSIX_X86_H__
+#ifndef __MADOSIX_PLATFORM_H__
+#define __MADOSIX_PLATFORM_H__
 
 #include <madosix/types.h>
 

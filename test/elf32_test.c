@@ -1,7 +1,7 @@
 #define __IN_LINUX__
 
 #include <madosix/elf32.h>
-#include <madosix/types.h>
+//#include <madosix/types.h>
 #include <madosix/io.h>
 
 #include <stdio.h>

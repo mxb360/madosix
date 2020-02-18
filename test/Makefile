@@ -12,7 +12,7 @@ MADOSIX_ROOT_DIR=..
 
 include $(MADOSIX_ROOT_DIR)/config.mk
 
-CFLAGS += -I $(MADOSIX_ROOT_DIR)/include
+CFLAGS = -I $(MADOSIX_ROOT_DIR)/include -Wall -g
 
 
 all: elf32_test

@@ -1,5 +1,5 @@
 // Intel 8250 serial port (UART).
-#include <x86/x86.h>
+#include <platform/platform.h>
 #include <madosix/types.h>
 #include <madosix/uart.h>
 
@@ -29,9 +29,6 @@ void uart_init(void)
     // enable interrupts.
     inb(COM1+2);
     inb(COM1+0);
-    //ioapicenable(IRQ_COM1, 0);
-
-    uart_puts("madosix: uart init ok ...");
 }
 
 void uart_putc(int c)

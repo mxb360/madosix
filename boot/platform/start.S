@@ -68,16 +68,32 @@ _start32:
     # 设置栈指针为0x7c00，即0x7c00之前的地址空间作为栈空间，以供C程序使用
     movl    $_start, %esp
 
-    # 调用bootloaderC语言部分的main函数，bootloader剩下的工作用C语言完成
+    # 调用bootloader C语言部分的bootmain函数，bootloader剩下的工作用C语言完成
     # bootloaderC语言部分的作用是找到内核文件的入口函数并调用
     # 正常情况下main函数不会返回
-    call bootloader_main
+    call bootmain
     
-    # 不应该执行此处
-    # 如果到此处，说明系统启动失败
-    # 程序卡死在此处
+/* 
+    mov $0x03, %ah
+	int $0x10
+
+	mov $_string, %bp
+	mov $0x1301, %ax
+	mov $0x000b, %bx
+	mov $38, %cx
+	int $0x10
+*/
+# 不应该执行此处
+# 如果到此处，说明系统启动失败
+# 程序卡死在此处
 spin:
     jmp     spin
+
+_string:
+	.ascii "Hello, World!"
+	.byte 13, 10
+	.ascii "You've in Bootloader!"
+	.byte 13, 10
 
 ################################ GDT定义 ###############################################
 

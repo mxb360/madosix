@@ -14,7 +14,8 @@ ARCH=x86
 CC=$(COMPILE_PREFIX)gcc 
 LD=$(COMPILE_PREFIX)ld
 
-CFLAGS = -m32 -Wall -N
+CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -fno-omit-frame-pointer
+ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 LDFLAGS =
 
 OBJCOPY=$(COMPILE_PREFIX)objcopy

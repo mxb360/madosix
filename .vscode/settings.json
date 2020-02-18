@@ -12,4 +12,11 @@
         "**/*.img": true,
         "**/*.elf": true,
     },
+    "files.associations": {
+        "uart.h": "c",
+        "elf32.h": "c",
+        "types.h": "c",
+        "mmu.h": "c",
+        "x86.h": "c"
+    },
 }
