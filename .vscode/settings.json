@@ -20,6 +20,8 @@
         "x86.h": "c",
         "memlayout.h": "c",
         "asm.h": "c",
-        "config.h": "c"
+        "config.h": "c",
+        "kernel.h": "c",
+        "stdarg.h": "c"
     },
 }

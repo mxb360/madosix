@@ -20,34 +20,78 @@
 # 日期：2020-1 2020-1
 
 
-include config.mk
+#include config.mk
+# 编译器配置
+COMPILE_PREFIX =
 
-BOOT_DIR=boot
-KERN_DIR=kernel
-TEST_DIR=test
+# 编译运行工具配置
+CC = $(COMPILE_PREFIX)gcc 
+LD = $(COMPILE_PREFIX)ld
+AS = $(TOOLPREFIX)gas
+OBJCOPY = $(COMPILE_PREFIX)objcopy
+OBJDUMP = $(COMPILE_PREFIX)objdump
+BUILD_BOOTIMG = perl
+DD = dd
+RM = rm -rf
+QEMU = qemu-system-i386
 
-# 默认行为：生成系统镜像文件
-all: madosix.img
+# 编译参数配置
+CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer -fno-stack-protector -Iinclude
+ASFLAGS = -m32 -gdwarf-2 -Wa,-divide -Iinclude
+LDFLAGS += -m elf_i386
+
+CFLAGS += -Wno-unused-function -Wno-unused-variable
+
+BOOT_DIR = boot
+KERNEL_DIR = kernel
+TEST_DIR = test
+LIB_DIR = lib
+
+KERNEL_OBJ = $(KERNEL_DIR)/main.o		\
+			 $(KERNEL_DIR)/pde.o		\
+			 $(KERNEL_DIR)/uart.o		\
+
+LIB_OBJ =    $(LIB_DIR)/string.o		\
+			 $(LIB_DIR)/vsnprintf.o		\
+
 madosiximg: madosix.img
+
+bootimg: boot.img
+
+kernelimg: kernel.img
+
+madosix.img: boot.img kernel.img
+	$(DD) if=/dev/zero of=madosix.img count=10000
+	$(DD) if=boot.img of=madosix.img conv=notrunc
+	$(DD) if=kernel.img of=madosix.img seek=1 conv=notrunc
+
+boot.img: $(BOOT_DIR)/main.c $(BOOT_DIR)/start.S $(BOOT_DIR)/boot.lds Makefile
+	$(CC) $(CFLAGS) -c $(BOOT_DIR)/start.S -o $(BOOT_DIR)/start.o
+	$(CC) $(CFLAGS) -c  $(BOOT_DIR)/main.c -o $(BOOT_DIR)/main.o
+	$(LD) $(LDFLAGS) -T $(BOOT_DIR)/boot.lds -o $(BOOT_DIR)/boot.elf $(BOOT_DIR)/start.o $(BOOT_DIR)/main.o
+	$(OBJDUMP) -S $(BOOT_DIR)/boot.elf > $(BOOT_DIR)/boot.asm
+	$(OBJCOPY) -S -O binary -j .text  $(BOOT_DIR)/boot.elf boot.img
+	$(BUILD_BOOTIMG) $(BOOT_DIR)/bootbuild.pl boot.img
+
+kernel.img: $(KERNEL_DIR)/entry.o $(KERNEL_DIR)/kernel.lds $(KERNEL_OBJ) $(LIB_OBJ) Makefile
+	$(LD) $(LDFLAGS) -T $(KERNEL_DIR)/kernel.lds $(KERNEL_DIR)/entry.o $(KERNEL_OBJ) $(LIB_OBJ) -o kernel.img
+	$(OBJDUMP) -S kernel.img > $(KERNEL_DIR)/kernel.asm
+
+$(KERNEL_DIR)/entry.o: $(KERNEL_DIR)/entry.S
+	$(CC) -c $< -o $@ $(ASFLAGS)
+
+-include $(KERNEL_DIR)/*.d
+-include $(LIB_DIR)/*.d
+
+%.o: %.c
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 # 生成镜像文件并运行(需要qemu)
 qemu: madosix.img
 	$(QEMU) -serial mon:stdio -drive file=madosix.img,format=raw -m 512
 
-bootimg: 
-	$(MAKE) -C $(BOOT_DIR)
-
-kernelimg:
-	$(MAKE) -C $(KERN_DIR)
-
 clean:
-	$(RM) -rf madosix.img
-
-	$(MAKE) -C $(BOOT_DIR) clean
-	$(MAKE) -C $(TEST_DIR) clean
-	$(MAKE) -C $(KERN_DIR) clean
-
-madosix.img: bootimg kernelimg
-	$(DD) if=/dev/zero of=madosix.img count=10000
-	$(DD) if=$(BOOT_DIR)/boot.img of=madosix.img conv=notrunc
-	$(DD) if=$(KERN_DIR)/kernel.img of=madosix.img seek=1 conv=notrunc
+	$(RM) madosix.img kernel.img boot.img
+	$(RM) $(KERNEL_DIR)/*.o $(KERNEL_DIR)/*.elf $(KERNEL_DIR)/*.asm $(KERNEL_DIR)/*.d 
+	$(RM) $(BOOT_DIR)/*.o $(BOOT_DIR)/*.elf $(BOOT_DIR)/*.asm $(BOOT_DIR)/*.d
+	$(RM) $(LIB_DIR)/*.o $(LIB_DIR)/*.d

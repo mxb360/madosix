@@ -1,6 +1,10 @@
 // This file contains definitions for the
 // x86 memory management unit (MMU).
 
+#ifndef __ASSEMBLER__
+#include <madosix/types.h>
+#endif
+
 // Eflags register
 #define FL_IF           0x00000200      // Interrupt Enable
 
