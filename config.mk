@@ -8,21 +8,20 @@
 # 日期：2020-1 2020-1
 
 # 编译器配置
-COMPILE_PREFIX=
-ARCH=x86
+COMPILE_PREFIX =
 
-CC=$(COMPILE_PREFIX)gcc 
-LD=$(COMPILE_PREFIX)ld
+# 编译运行工具配置
+CC = $(COMPILE_PREFIX)gcc 
+LD = $(COMPILE_PREFIX)ld
+AS = $(TOOLPREFIX)gas
+OBJCOPY = $(COMPILE_PREFIX)objcopy
+OBJDUMP = $(COMPILE_PREFIX)objdump
+BUILD_BOOTIMG = perl
+DD = dd
+RM = rm
+QEMU = qemu-system-i386
 
-CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -fno-omit-frame-pointer
+# 编译参数配置
+CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer -fno-stack-protector
 ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 LDFLAGS += -m elf_i386
-
-OBJCOPY=$(COMPILE_PREFIX)objcopy
-OBJDUMP=$(COMPILE_PREFIX)objdump
-
-BUILD_BOOTIMG=perl
-DD=dd
-RM=rm
-
-QEMU=qemu-system-i386

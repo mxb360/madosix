@@ -18,7 +18,7 @@ ASFLAGS += -I$(MADOSIX_ROOT_DIR)/include
 KERNEL_OBJ = entry.o main.o uart.o
 
 kernel.img: $(KERNEL_OBJ)
-	$(LD) $(LDFLAGS)  -T kernel.lds $(KERNEL_OBJ) -o kernel.img
+	$(LD) $(LDFLAGS) -T kernel.lds $(KERNEL_OBJ) -o kernel.img
 	$(OBJDUMP) -S kernel.img > kernel.asm
 
 

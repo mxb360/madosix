@@ -12,9 +12,6 @@ int main(void)
     while (1);
 }
 
-
-
-
 // The boot page table used in entry.S
 // Page directories (and page tables) must start on page boundaries,
 // hence the __aligned__ attribute.
@@ -26,3 +23,4 @@ pde_t entrypgdir[NPDENTRIES] = {
     // Map VA's [KERNBASE, KERNBASE+4MB) to PA's [0, 4MB)
     [KERNBASE>>PDXSHIFT] = (0) | PTE_P | PTE_W | PTE_PS,
 };
+
