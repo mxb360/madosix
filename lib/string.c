@@ -1,9 +1,9 @@
+#include <asm/io.h>
 #include <madosix/string.h>
 
 void *memset(void *dst, int c, size_t n)
 {
-    for (int i = 0; i < n; i++)
-        *(int *)dst++ = c;
+    stosb(dst, c, n);
     return dst;
 }
 

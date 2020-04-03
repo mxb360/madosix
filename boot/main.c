@@ -1,4 +1,4 @@
-#include <madosix/x86.h>
+#include <asm/io.h>
 #include <madosix/types.h>
 #include <madosix/elf32.h>
 

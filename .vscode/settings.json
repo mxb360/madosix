@@ -22,6 +22,11 @@
         "asm.h": "c",
         "config.h": "c",
         "kernel.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "io.h": "c",
+        "string.h": "c",
+        "memory.h": "c",
+        "_mmu.h": "c",
+        "system.h": "c"
     },
 }

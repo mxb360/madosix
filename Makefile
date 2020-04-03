@@ -50,6 +50,10 @@ LIB_DIR = lib
 KERNEL_OBJ = $(KERNEL_DIR)/main.o		\
 			 $(KERNEL_DIR)/pde.o		\
 			 $(KERNEL_DIR)/uart.o		\
+			 $(KERNEL_DIR)/alltraps.o   \
+			 $(KERNEL_DIR)/trap.o       \
+			 $(KERNEL_DIR)/vector.o     \
+			 $(KERNEL_DIR)/syscall.o    \
 
 LIB_OBJ =    $(LIB_DIR)/string.o		\
 			 $(LIB_DIR)/vsnprintf.o		\

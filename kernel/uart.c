@@ -1,7 +1,7 @@
-// Intel 8250 serial port (UART).
-#include <madosix/uart.h>
+#include <asm/io.h>
+#include <asm/uart.h>
+#include <asm/memory.h>
 #include <madosix/kernel.h>
-#include <madosix/memlayout.h>
 
 #define COM1    0x3f8
 
@@ -33,12 +33,15 @@ void uart_init(void)
 
 #define BACKSPACE 0x100
 #define CRTPORT 0x3d4
-static ushort *crt = (ushort*)P2V(0xb8000);  // CGA memory
+static ushort *crt = NULL; 
 
 /* 图形界面字符输出 */
 static void gaputc(int c)
 {
     int pos;
+
+    if (!crt)
+        crt = phys_to_virt(0xb8000);  // CGA memory
 
     // Cursor position: col + 80*row.
     outb(CRTPORT, 14);
