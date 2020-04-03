@@ -1,6 +1,6 @@
-#include <platform/platform.h>
-#include <platform/memlayout.h>
-#include <platform/mmu.h>
+#include <madosix/memlayout.h>
+#include <madosix/x86.h>
+#include <madosix/mmu.h>
 #include <madosix/types.h>
 #include <madosix/uart.h>
 

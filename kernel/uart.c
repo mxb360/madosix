@@ -1,5 +1,5 @@
 // Intel 8250 serial port (UART).
-#include <platform/platform.h>
+#include <madosix/x86.h>
 #include <madosix/types.h>
 #include <madosix/uart.h>
 

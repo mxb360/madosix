@@ -13,11 +13,9 @@ MADOSIX_ROOT_DIR=..
 include $(MADOSIX_ROOT_DIR)/config.mk
 
 CFLAGS += -I$(MADOSIX_ROOT_DIR)/include
-LDFLAGS += -m elf_i386
 ASFLAGS += -I$(MADOSIX_ROOT_DIR)/include
-all: kernel.img
 
-KERNEL_OBJ= entry.o main.o uart.o
+KERNEL_OBJ = entry.o main.o uart.o
 
 kernel.img: $(KERNEL_OBJ)
 	$(LD) $(LDFLAGS)  -T kernel.lds $(KERNEL_OBJ) -o kernel.img

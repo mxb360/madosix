@@ -17,6 +17,9 @@
         "elf32.h": "c",
         "types.h": "c",
         "mmu.h": "c",
-        "x86.h": "c"
+        "x86.h": "c",
+        "memlayout.h": "c",
+        "asm.h": "c",
+        "config.h": "c"
     },
 }

@@ -1,10 +1,10 @@
-#include <platform/platform.h>
+#include <madosix/x86.h>
 #include <madosix/types.h>
 #include <madosix/elf32.h>
 
-#define SECTOR_SIZE    512
-#define KERNEL_HEADER  0x1000000
-#define out_char(c)    *(uint16_t *)0xb8000 = (c) | 0x0400
+#define SECTOR_SIZE       512
+#define KERNEL_HEADER     0x1000000
+#define print_error()    *(uint16_t *)0xb8000 = ('E') | 0x0400
 
 /* 复制硬盘上一个扇区的数据到内存
  * dst:    内存地址
@@ -46,7 +46,7 @@ static void copy_program_section(void *dest, uint32_t size, uint32_t offset)
 /* bootloader C语言部分入口函数 
  * 在start.S里被调用
  */
-void bootmain(void)
+void boot_main(void)
 {
     int index;
     elf32_header_t *kernel_header;
@@ -60,11 +60,8 @@ void bootmain(void)
     copy_program_section(kernel_header, sizeof(elf32_header_t), 0);
 
     /* 如果镜像不是一个ELF32格式，表示没有找到正确的系统镜像，系统启动失败，直接返回 */
-    if (!is_elf32_file(kernel_header)) {
-        /* 往显存里写红色的字符N，表示“错误：镜像不是ELF32格式” */
-        out_char('N');
-        return;
-    }
+    if (!is_elf32_file(kernel_header))
+        goto boot_failed;
 
     /* 读取kernel镜像里的每一个程序段到内存 */
     program_header_start = get_program_header(kernel_header);
@@ -85,6 +82,7 @@ void bootmain(void)
     /* 获取内核的启动函数入口，并启动内核，此函数不会返回*/
     ((void(*)(void))kernel_header->entry)();
 
-    /* 往显存里写红色的字符E，表示“错误： start_kernel返回” */
-    out_char('E');
+boot_failed:
+    /* 往显存里输出错误信息 */
+    print_error();
 }

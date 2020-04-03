@@ -16,7 +16,7 @@ LD=$(COMPILE_PREFIX)ld
 
 CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -fno-omit-frame-pointer
 ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
-LDFLAGS =
+LDFLAGS += -m elf_i386
 
 OBJCOPY=$(COMPILE_PREFIX)objcopy
 OBJDUMP=$(COMPILE_PREFIX)objdump
