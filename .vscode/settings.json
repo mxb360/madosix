@@ -27,6 +27,8 @@
         "string.h": "c",
         "memory.h": "c",
         "_mmu.h": "c",
-        "system.h": "c"
+        "system.h": "c",
+        "interrupt.h": "c",
+        "traps.h": "c"
     },
 }

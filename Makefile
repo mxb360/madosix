@@ -16,7 +16,7 @@
 #
 #     make qemu             # 通过qemu虚拟机运行madosix.img系统镜像
 #
-# 作者： mxb3600 
+# 作者： mxb360
 # 日期：2020-1 2020-1
 
 
@@ -51,8 +51,8 @@ KERNEL_OBJ = $(KERNEL_DIR)/main.o		\
 			 $(KERNEL_DIR)/pde.o		\
 			 $(KERNEL_DIR)/uart.o		\
 			 $(KERNEL_DIR)/alltraps.o   \
-			 $(KERNEL_DIR)/trap.o       \
-			 $(KERNEL_DIR)/vector.o     \
+			 $(KERNEL_DIR)/traps.o      \
+			 $(KERNEL_DIR)/vectors.o    \
 			 $(KERNEL_DIR)/syscall.o    \
 
 LIB_OBJ =    $(LIB_DIR)/string.o		\

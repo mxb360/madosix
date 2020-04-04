@@ -1,4 +1,5 @@
-// x86 trap and interrupt constants.
+#ifndef __MADOSIX_ASM_TRAPS_H__
+#define __MADOSIX_ASM_TRAPS_H__
 
 // Processor-defined:
 #define T_DIVIDE         0      // divide error
@@ -24,7 +25,7 @@
 
 // These are arbitrarily chosen, but with care not to overlap
 // processor defined exceptions or interrupt vectors.
-#define T_SYSCALL       64      // system call
+#define T_SYSCALL      0x80     // system call
 #define T_DEFAULT      500      // catchall
 
 #define T_IRQ0          32      // IRQ 0 corresponds to int T_IRQ
@@ -36,3 +37,25 @@
 #define IRQ_ERROR       19
 #define IRQ_SPURIOUS    31
 
+#define PIC0_ICW1		0x0020
+#define PIC0_OCW2		0x0020
+#define PIC0_IMR		0x0021
+#define PIC0_ICW2		0x0021
+#define PIC0_ICW3		0x0021
+#define PIC0_ICW4		0x0021
+#define PIC1_ICW1		0x00a0
+#define PIC1_OCW2		0x00a0
+#define PIC1_IMR		0x00a1
+#define PIC1_ICW2		0x00a1
+#define PIC1_ICW3		0x00a1
+#define PIC1_ICW4		0x00a1
+
+#define PIT_CTRL	0x0043
+#define PIT_CNT0	0x0040
+
+extern volatile uint32_t systick;
+
+void pic_init(void);
+void pit_init(void);
+
+#endif
