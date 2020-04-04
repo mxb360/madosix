@@ -29,6 +29,9 @@ void uart_init(void)
     // enable interrupts.
     inb(COM1+2);
     inb(COM1+0);
+
+    printk("uart init ...\n");
+    printk("starting madosix kernel ...\n");
 }
 
 #define BACKSPACE 0x100
@@ -85,22 +88,32 @@ void uart_putc(int c)
     gaputc(c);
 }
 
-void uart_puts(const char *s)
+void uart_put_string(const char *s)
 {
     while (*s)
         uart_putc(*s++);
+}
+
+void uart_puts(const char *s)
+{
+    uart_put_string(s);
     uart_putc('\n');
+}
+
+void uart_vprintf(const char *format, va_list ap)
+{
+    char buf[128] = {0}, *s = buf;
+
+	vsnprintf(buf, 128, format, ap);
+
+    while (*s)
+        uart_putc(*s++);
 }
 
 void uart_printf(const char *format, ...)
 {
     va_list ap;
-    char buf[128] = {0}, *s = buf;
-
 	va_start(ap, format);
-	vsnprintf(buf, 128, format, ap);
+    uart_vprintf(format, ap);
 	va_end(ap);
-
-    while (*s)
-        uart_putc(*s++);
 }

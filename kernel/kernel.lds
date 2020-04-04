@@ -10,4 +10,6 @@ SECTIONS
 	. = ALIGN(0x1000);
 	.data : { *(.data) }
 	.bss : { *(.bss) }
+
+	PROVIDE(__kernel_end = .);
 }

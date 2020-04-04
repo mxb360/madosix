@@ -29,6 +29,7 @@
         "_mmu.h": "c",
         "system.h": "c",
         "interrupt.h": "c",
-        "traps.h": "c"
+        "traps.h": "c",
+        "type_traits": "c"
     },
 }

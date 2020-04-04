@@ -2,6 +2,7 @@
 #include <asm/system.h>
 #include <asm/io.h>
 #include <asm/traps.h>
+#include <asm/uart.h>
 
 
 extern void trap_init(void);
@@ -19,6 +20,28 @@ void delay(uint32_t t)
     while (current + t > systick);
 }
 
+void syscall_test(void)
+{
+    printk("syscall test ...\n");
+
+    int res;
+
+    res = syscall_test0();
+    printk("main(): syscall_test0 return: %d\n\n", res);
+    res = syscall_test1(7);
+    printk("main(): syscall_test1 return: %d\n\n", res);
+    res = syscall_test2(6, 9);
+    printk("main(): syscall_test2 return: %d\n\n", res);
+}
+
+void timer_test(void)
+{
+    delay(100);
+    printk("systick: %d\n", systick);
+}
+
+extern char __kernel_end[];
+
 int main(void)
 {
     uart_init();
@@ -26,21 +49,15 @@ int main(void)
     pit_init();
     seg_init();
     trap_init();
-
-    printk("starting madosix kernel ...\n");
-
     sti();
-    int res;
-    
-    res = syscall_test0();
-    printk("main(): syscall_test0 return: %d\n\n", res);
-    res = syscall_test1(7);
-    printk("main(): syscall_test1 return: %d\n\n", res);
-    res = syscall_test2(6, 9);
-    printk("main(): syscall_test2 return: %d\n\n", res);
+
+    printk("__kernel_end=%x\n", __kernel_end);
+    printk("kernel_size=%d\n", (int)__kernel_end - KERNBASE);
+
+    syscall_test();
 
     while (1) {
-        delay(100);
-        printk("100 systick: %d\n", systick);
+        timer_test();
     }
 }
+

@@ -193,11 +193,11 @@ static int s2s(char *buffer, int buffer_len, const char *str, int alignment, int
 	return count;
 }
 
-int vsnprintf(char *buf, int buf_len, const char *format, va_list ap) 
+static int _vsnprintf(char *buf, int buf_len, const char *format, va_list ap)
 {
 	int n = 0, len = 0;
 
-	for(; *format != '\0' && len < buf_len; format++) {
+	for(; *format != '\0' && (!buf_len || len < buf_len); format++) {
 		int case_ = 0, base = 0, type = 0;
 		int lead = 0, prefix = 0, width1 = 0, width2 = 0, alignment = 1;
 
@@ -287,12 +287,40 @@ int vsnprintf(char *buf, int buf_len, const char *format, va_list ap)
 	return len;
 }
 
+int vsnprintf(char *buf, int buf_len, const char *format, va_list ap) 
+{
+	if (buf_len <= 0)
+		return 0;
+
+	return _vsnprintf(buf, buf_len, format, ap);
+}
+
 int snprintf(char *buf, int n, const char *format, ...)
 {
 	va_list ap;
 
+	if (n <= 0)
+		return 0;
+
 	va_start(ap, format);
-	n = vsnprintf(buf, n, format, ap);
+	n = _vsnprintf(buf, n, format, ap);
+	va_end(ap);
+
+	return n;
+}
+
+int vsprintf(char *buf, const char *format, va_list ap) 
+{
+	return _vsnprintf(buf, 0, format, ap);
+}
+
+int sprintf(char *buf, const char *format, ...)
+{
+	int n;
+	va_list ap;
+
+	va_start(ap, format);
+	n = _vsnprintf(buf, 0, format, ap);
 	va_end(ap);
 
 	return n;

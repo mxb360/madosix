@@ -54,9 +54,11 @@ KERNEL_OBJ = $(KERNEL_DIR)/main.o		\
 			 $(KERNEL_DIR)/traps.o      \
 			 $(KERNEL_DIR)/vectors.o    \
 			 $(KERNEL_DIR)/syscall.o    \
+			 $(KERNEL_DIR)/panic.o      \
+			 $(KERNEL_DIR)/printk.o     \
 
 LIB_OBJ =    $(LIB_DIR)/string.o		\
-			 $(LIB_DIR)/vsnprintf.o		\
+			 $(LIB_DIR)/vsprintf.o		\
 
 madosiximg: madosix.img
 
@@ -69,10 +71,10 @@ madosix.img: boot.img kernel.img
 	$(DD) if=boot.img of=madosix.img conv=notrunc
 	$(DD) if=kernel.img of=madosix.img seek=1 conv=notrunc
 
-boot.img: $(BOOT_DIR)/main.c $(BOOT_DIR)/start.S $(BOOT_DIR)/boot.lds Makefile
+boot.img: $(BOOT_DIR)/boot.c $(BOOT_DIR)/start.S $(BOOT_DIR)/boot.lds Makefile
 	$(CC) $(CFLAGS) -c $(BOOT_DIR)/start.S -o $(BOOT_DIR)/start.o
-	$(CC) $(CFLAGS) -c  $(BOOT_DIR)/main.c -o $(BOOT_DIR)/main.o
-	$(LD) $(LDFLAGS) -T $(BOOT_DIR)/boot.lds -o $(BOOT_DIR)/boot.elf $(BOOT_DIR)/start.o $(BOOT_DIR)/main.o
+	$(CC) $(CFLAGS) -c  $(BOOT_DIR)/boot.c -o $(BOOT_DIR)/boot.o
+	$(LD) $(LDFLAGS) -T $(BOOT_DIR)/boot.lds -o $(BOOT_DIR)/boot.elf $(BOOT_DIR)/start.o $(BOOT_DIR)/boot.o
 	$(OBJDUMP) -S $(BOOT_DIR)/boot.elf > $(BOOT_DIR)/boot.asm
 	$(OBJCOPY) -S -O binary -j .text  $(BOOT_DIR)/boot.elf boot.img
 	$(BUILD_BOOTIMG) $(BOOT_DIR)/bootbuild.pl boot.img

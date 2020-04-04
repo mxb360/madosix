@@ -1,3 +1,6 @@
+#ifndef __MADOSIX_ASM_IO_H__
+#define __MADOSIX_ASM_IO_H__
+
 #include <asm/types.h>
 #include <asm/config.h>
 
@@ -81,3 +84,5 @@ __asm__ volatile ("inb %%dx,%%al\n" \
 	"1:":"=a" (_v):"d" (port)); \
 _v; \
 })
+
+#endif
