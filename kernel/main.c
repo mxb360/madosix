@@ -51,9 +51,10 @@ int main(void)
     trap_init();
     sti();
 
-    printk("__kernel_end=%x\n", __kernel_end);
-    printk("kernel_size=%d\n", (int)__kernel_end - KERNBASE);
-
+    iprintk("kernel base: 0x%x\n", KERNBASE);
+    dprintk("kernel end addr: 0x%x\n", __kernel_end);
+    wprintk("kernel size: %d\n", (int)__kernel_end - KERNBASE - 0x100000);
+    *(int *)0 = 0;
     syscall_test();
 
     while (1) {

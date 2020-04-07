@@ -3,6 +3,9 @@
 #include <asm/memory.h>
 #include <madosix/kernel.h>
 
+#define IGNORE_GAPUTC_COLOR
+// #define IGNORE_UART_PUTC_COLOR
+
 #define COM1    0x3f8
 
 static int uart;    // is there a uart?
@@ -30,8 +33,8 @@ void uart_init(void)
     inb(COM1+2);
     inb(COM1+0);
 
-    printk("uart init ...\n");
     printk("starting madosix kernel ...\n");
+    printk("uart init ...\n");
 }
 
 #define BACKSPACE 0x100
@@ -42,6 +45,23 @@ static ushort *crt = NULL;
 static void gaputc(int c)
 {
     int pos;
+
+#ifdef IGNORE_GAPUTC_COLOR
+    static int ignore;
+
+    if (c == '\e')
+        ignore = 1;
+    else if (ignore == 1 && c == '[')
+        ignore = 2;
+    else if (ignore == 2 && (isdigit(c) || c == ';'))
+        return;
+    else if (ignore == 2 && c == 'm')
+        ignore = 3;
+    else 
+        ignore = 0;
+    if (ignore)
+        return;
+#endif
 
     if (!crt)
         crt = phys_to_virt(0xb8000);  // CGA memory
@@ -78,20 +98,37 @@ static void gaputc(int c)
 
 void uart_putc(int c)
 {
-    int i;
+#ifdef IGNORE_UART_PUTC_COLOR
+    static int ignore;
+
+    if (c == '\e')
+        ignore = 1;
+    else if (ignore == 1 && c == '[')
+        ignore = 2;
+    else if (ignore == 2 && (isdigit(c) || c == ';'))
+        return;
+    else if (ignore == 2 && c == 'm')
+        ignore = 3;
+    else 
+        ignore = 0;
+    if (ignore)
+        return;
+#endif
 
     if (!uart)
         return;
-    for (i = 0; i < 128 && !(inb(COM1+5) & 0x20); i++)
-        ;//microdelay(10);
-    outb(COM1+0, c);
-    gaputc(c);
+    for (int i = 0; i < 128 && !(inb(COM1+5) & 0x20); i++);
+    outb(COM1, c);
 }
 
 void uart_put_string(const char *s)
 {
-    while (*s)
-        uart_putc(*s++);
+    int ignore = false;
+
+    while (*s) {
+        uart_putc(*s);
+        gaputc(*s++);
+    }
 }
 
 void uart_puts(const char *s)
@@ -102,12 +139,10 @@ void uart_puts(const char *s)
 
 void uart_vprintf(const char *format, va_list ap)
 {
-    char buf[128] = {0}, *s = buf;
+    char buf[128];
 
-	vsnprintf(buf, 128, format, ap);
-
-    while (*s)
-        uart_putc(*s++);
+	vsnprintf(buf, 127, format, ap);
+    uart_put_string(buf);
 }
 
 void uart_printf(const char *format, ...)
